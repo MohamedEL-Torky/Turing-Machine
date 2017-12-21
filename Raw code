@@ -1,0 +1,104 @@
+package turingmachine;
+
+import java.util.HashMap;
+import java.util.Scanner;
+
+/**
+ *
+ * @author Mohamed ELTorky
+ */
+public class TuringMachine {
+
+
+    public static void main(String[] args) {
+        // TODO code application logic here
+        int noState = 0; /*number of states without 
+        counting accept or reject state */
+        int noAlpha = 0; //number of alphabets including the blanks
+        Scanner input = new Scanner(System.in);
+        try{
+            System.out.println("Enter no of States");
+            noState = input.nextInt();
+            System.out.println("---------------");
+            System.out.println("Enter no of Alphabets");
+            noAlpha = input.nextInt();
+            System.out.println("---------------");
+        }
+        catch(Exception ex){
+            System.out.println("Must be a number!");
+        }
+        int noTransations = noState*noAlpha;                                    //number of Transations in the machine
+        HashMap<String,String> transations = new HashMap<String,String>();      //hash map to get the first part of transation as key and the second as value
+        String stateInput = "";
+        String stateUpdateMove = "";
+        System.out.println("Enter Transations");
+        System.out.println("Note your transations must start with q0!");
+        System.out.println("!!Note To enter transation you must enter the first part sperated with comma\n"
+                + "and press enter then enter the second part sperated with commas then hit enter then repeat.\n"
+                + "Also you can enter it in small or capital letters.");
+        for(int i = 0; i < noTransations; i++){
+            stateInput = input.next();
+            stateUpdateMove = input.next();
+            transations.put(stateInput, stateUpdateMove);
+        }
+        System.out.println("---------------");
+        System.out.println("Enter The Tape");
+        System.out.println("!!Note Blank symbol is u!!");
+        String tape = input.next();
+        System.out.println("---------------");
+        System.out.println("Enter Head Postion");
+        int postion = 1;
+        try{
+            postion = input.nextInt();
+        }
+        catch(Exception ex){
+            System.out.println("Must be a number!");
+        }
+        System.out.println("---------------");
+        //Problem solving
+        String currentState = "q1";
+        String updatedTape = "";
+        String[] moveUpdateDirection;
+        char[] updated = tape.toCharArray();
+        while(true){
+            if(postion > tape.length()){
+                for(int i =0; i < postion-tape.length(); i++){
+                    tape+="u";
+                }
+                updated = tape.toCharArray();
+            }
+            System.out.print("current state is : ");
+            System.out.print(currentState+","+tape.charAt(postion-1) +" = ");
+            System.out.println(transations.get(currentState+","+tape.charAt(postion-1)));
+            moveUpdateDirection = (transations.get(currentState+","+tape.charAt(postion-1))).split(","); //get the value of the key
+            currentState = moveUpdateDirection[0];  //update the state
+            if( (!moveUpdateDirection[1].equals("")|| 
+                 !moveUpdateDirection[1].equals(null)) 
+                 && (tape.charAt(postion-1) != moveUpdateDirection[1].charAt(0) ) ){ //update the tape if require with the new symbol
+                
+                updated[postion-1] = moveUpdateDirection[1].charAt(0);
+                tape = String.valueOf(updated);
+            }
+            if(moveUpdateDirection[2].equals("R") || moveUpdateDirection[2].equals("r")) {//get the moving direction
+                postion++;
+            }
+            else{
+                postion--;
+            }
+            System.out.println("---------------");
+            System.out.println("Updated tape is:");
+            System.out.println(tape);
+            if(currentState.equals("accept") || currentState.equals("ACCEPT")){
+                System.out.println("Tape Finally accepted !");
+                break;
+            }
+            else if(currentState.equals("reject") || currentState.equals("REJECTED")){
+                System.out.println("Tape Finally rejected !");
+                break;
+            }
+            System.out.println("Now moving "+ moveUpdateDirection[2]);
+        }
+        
+    }
+    
+}
