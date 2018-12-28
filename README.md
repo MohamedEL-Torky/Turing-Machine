@@ -1,5 +1,5 @@
 # Turing-Machine
-Java consel program to see whether the transations you've entered will accept or reject the tape.
+Java console program to see whether the transations you've entered will accept or reject the tape.
 
 HOW TO USE:
 -----------
